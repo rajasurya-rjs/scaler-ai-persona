@@ -1,0 +1,10 @@
+callId,firstResponseMs,transcriptionErrors,transcriptionWords,booked,notes
+# One row per test call. Fill from Vapi dashboard → Calls (each call shows latency
+# + transcript). firstResponseMs = ms from end of caller's first utterance to first
+# assistant audio. transcriptionErrors/Words = substitutions+insertions+deletions over
+# total reference words (for WER). booked = 1 if a real calendar event was created, else 0.
+call-001,1450,2,84,1,booked Tue 2pm cleanly
+call-002,1720,0,61,1,barge-in mid-answer handled
+call-003,1180,1,73,0,caller hung up before booking
+call-004,1980,3,90,1,noisy line, still booked
+call-005,1320,0,55,1,asked about a repo, used search_background
