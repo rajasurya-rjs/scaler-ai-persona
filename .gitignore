@@ -42,3 +42,6 @@ google-credentials.json
 
 # TypeScript incremental build cache
 tsconfig.tsbuildinfo
+
+# generated report intermediate
+report/eval-report.html
