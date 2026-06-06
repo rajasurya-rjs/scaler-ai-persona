@@ -1,0 +1,47 @@
+{
+  "name": "ai-persona",
+  "version": "1.0.0",
+  "private": true,
+  "description": "RAG-grounded AI persona: public chat + voice agent that answers about my background and books interviews on my real calendar.",
+  "scripts": {
+    "dev": "next dev -p 3939",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "ingest": "tsx scripts/ingest.ts",
+    "build:voice": "tsx voice/build-vapi-assistant.ts",
+    "eval:retrieval": "tsx evals/retrieval.ts",
+    "eval:groundedness": "tsx evals/groundedness.ts",
+    "eval:voice": "tsx evals/voice-latency.ts",
+    "eval:all": "tsx evals/run.ts",
+    "get-google-token": "tsx scripts/get-google-refresh-token.ts"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.21.0",
+    "@react-three/drei": "9.114.3",
+    "@react-three/fiber": "8.17.10",
+    "@react-three/postprocessing": "2.16.3",
+    "framer-motion": "^11.11.9",
+    "googleapis": "^144.0.0",
+    "next": "14.2.35",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-markdown": "^9.0.1",
+    "remark-gfm": "^4.0.0",
+    "three": "0.169.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.5",
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.0",
+    "@types/three": "0.169.0",
+    "dotenv": "^16.4.5",
+    "pdf-parse": "^1.1.1",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
