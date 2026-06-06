@@ -189,11 +189,37 @@ export async function bookMeeting(args: {
 }): Promise<BookResult> {
   const c = cfg();
   try {
-    const auth = oauthClient();
-    const calendar = google.calendar({ version: "v3", auth });
+    // --- Guard against bad tool args (esp. from voice, where the model may fill
+    //     the schema's example values or guess a date instead of asking). ---
+    const email = (args.attendeeEmail ?? "").trim();
+    const emailValid =
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) &&
+      !/example\.(com|org|net)$/i.test(email) &&
+      !/your\.?email|name@|test@/i.test(email);
+    if (!emailValid) {
+      return {
+        success: false,
+        error:
+          "I don't have a valid email for the invite yet. Ask the caller for their real email and read it back to confirm the spelling, then book.",
+      };
+    }
+    const name = (args.attendeeName ?? "").trim();
+    if (!name || /^your name$/i.test(name)) {
+      return { success: false, error: "I still need the caller's real name before booking — please ask for it." };
+    }
 
     const start = new Date(args.startISO);
+    if (isNaN(start.getTime()) || start.getTime() < Date.now()) {
+      return {
+        success: false,
+        error:
+          "That start time is invalid or in the past. Call get_availability again and book using the EXACT startISO value it returns — do not construct the date yourself.",
+      };
+    }
     const end = new Date(start.getTime() + c.durationMin * 60_000);
+
+    const auth = oauthClient();
+    const calendar = google.calendar({ version: "v3", auth });
 
     // Guard: re-check the slot is still free (avoid double-booking races).
     const fb = await calendar.freebusy.query({

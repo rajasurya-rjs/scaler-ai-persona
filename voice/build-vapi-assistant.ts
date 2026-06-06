@@ -80,11 +80,18 @@ function main() {
           ),
           serverTool(
             "book_meeting",
-            "Book a real interview on the candidate's calendar once the caller picked a slot and gave name + email.",
+            "Book a real interview ONLY after the caller picked a slot and gave their real name + email. Never call with placeholder values.",
             {
-              startISO: { type: "string", description: "Chosen slot start, ISO 8601, from get_availability." },
-              attendeeName: { type: "string", description: "Caller's full name." },
-              attendeeEmail: { type: "string", description: "Caller's email for the invite." },
+              startISO: {
+                type: "string",
+                description:
+                  "The EXACT startISO value returned by get_availability for the chosen slot (copy it verbatim). Never construct or guess this date.",
+              },
+              attendeeName: { type: "string", description: "The caller's real full name (ask them — never 'Your Name')." },
+              attendeeEmail: {
+                type: "string",
+                description: "The caller's real email, confirmed by reading it back. Never a placeholder like your.email@example.com.",
+              },
               notes: { type: "string", description: "Optional context." },
             },
             ["startISO", "attendeeName", "attendeeEmail"],

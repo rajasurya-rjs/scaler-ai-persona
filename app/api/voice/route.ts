@@ -75,7 +75,15 @@ async function dispatch(name: string, args: Record<string, any>): Promise<string
       case "get_availability": {
         const slots = await getAvailability(Math.min(Number(args.limit ?? 4), 6));
         if (!slots.length) return "I don't have open slots in the next couple of weeks. Please suggest a time and I'll check.";
-        return "Available slots: " + slots.map((s) => s.label).join("; ") + ". Each is 30 minutes.";
+        // Speak the labels, but ALSO give each slot's exact startISO so book_meeting
+        // gets the real timestamp (the model must NOT construct the date itself —
+        // that caused wrong-year bookings). Pair label↔startISO explicitly.
+        const lines = slots
+          .map((s, i) => `${i + 1}. ${s.label}  [startISO=${s.startISO}]`)
+          .join("\n");
+        return (
+          `Open 30-minute slots (say the time to the caller, but when booking pass the EXACT startISO shown):\n${lines}`
+        );
       }
       case "book_meeting": {
         const res = await bookMeeting({
